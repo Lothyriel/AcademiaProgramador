@@ -5,10 +5,9 @@
  */
 package Academia_do_Programador;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
@@ -17,27 +16,19 @@ import javax.swing.text.MaskFormatter;
  */
 public class Janela extends javax.swing.JFrame {
 
-    ArrayList<Equipamentos> equipamentos = new ArrayList();
-    ArrayList<Chamados> chamados = new ArrayList();
+    private ArrayList<Equipamentos> equipamentos = new ArrayList();
+    private ArrayList<Chamados> chamados = new ArrayList();
+    private DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Janela() {
+
         initComponents();
-        preencher();
         try {
             MaskFormatter maskData = new MaskFormatter("##/##/####");
             MaskFormatter maskData2 = new MaskFormatter("##/##/####");
             maskData.install(tf_data_fabr);
             maskData2.install(tf_data_ab);
-
-            Date data;                                                              //////EXCLUIR
-            SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-            data = f.parse("27/04/2010");
-
-            Equipamentos equipa = new Equipamentos("1", 1, 1, data, "sexo");
-            equipamentos.add(equipa);
-
-        } catch (ParseException ex) {
-            System.out.println("bo nas mask");
+        } catch (Exception e) {
         }
     }
 
@@ -189,6 +180,11 @@ public class Janela extends javax.swing.JFrame {
         Abas.addTab("Equipamentos", panel_equipamentos);
 
         bt_removerc.setText("Remover");
+        bt_removerc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_removercActionPerformed(evt);
+            }
+        });
 
         jLabel11.setText("Chamado: ");
 
@@ -324,20 +320,31 @@ public class Janela extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void preencher() {
-        DefaultTableModel model = (DefaultTableModel) table_equip.getModel();
+        DefaultTableModel modelc = (DefaultTableModel) table_chamados.getModel();
+        DefaultTableModel modele = (DefaultTableModel) table_equip.getModel();
+
         String s;
+
         cb_equip.removeAllItems();
-        model.setRowCount(0);
+
+        modele.setRowCount(0);
         for (Equipamentos u : equipamentos) {
-            s = Integer.toString(u.getNro_serie());
             cb_equip.addItem(u.getNome());
-            model.addRow(new String[]{u.getNome(), s, "Fabricante"});
+            s = Integer.toString(u.getNro_serie());
+            modele.addRow(new String[]{u.getNome(), s, u.getFabricante()});
+        }
+
+        modelc.setRowCount(
+                0);
+        for (Chamados u : chamados) {
+            s = Integer.toString(10);
+            modelc.addRow(new String[]{u.getChamado(), u.getEquipamento().getNome(), f.format(u.getData_abertura()), s});
         }
     }
 
     private void limpar() {
         tf_nome.setText("");
-        tf_preco.setText("");;
+        tf_preco.setText("");
         tf_nr_serie.setText("");
         tf_data_fabr.setText("");
         tf_fabricante.setText("");
@@ -352,7 +359,7 @@ public class Janela extends javax.swing.JFrame {
         int nro_serie = -1;
         String fabricante = tf_fabricante.getText();
 
-        Date data_fabr = null;
+        LocalDate data_fabr = null;
 
         if (nome.length() < 6) {
             System.err.println("Insira um nome com mais de 6 caracteres");
@@ -364,11 +371,11 @@ public class Janela extends javax.swing.JFrame {
                 try {
                     nro_serie = Integer.parseInt(tf_nr_serie.getText());
                     try {
-                        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-                        data_fabr = f.parse(tf_data_fabr.getText());
+                        data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
                         Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
                         equipamentos.add(equipa);
                         limpar();
+                        preencher();
                     } catch (Exception e) {
                         System.err.println("Insira uma data válida");
                     }
@@ -386,27 +393,28 @@ public class Janela extends javax.swing.JFrame {
         String chamado = tf_chamado.getText();
         String desc = tf_desc.getText();
 
-        Date data_ab = null;
+        LocalDate data_ab = null;
 
-        int dias = 0;
-
-        if (chamado != "") {
+        if (chamado.equals("")) {
             System.err.println("Insira um título");
-        } else if (desc == "") {
+        } else if (desc.equals("")) {
             System.err.println("Insira uma descrição");
         } else {
             try {
-                SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-                data_ab = f.parse(tf_data_ab.getText());
+                data_ab = data_ab.parse(tf_data_ab.getText(), f);
+                try {
+                    Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
+                    chamados.add(c);
+                    System.out.println("CADASTRADO!!");
+                    preencher();
+                    limpar();
+                } catch (Exception e) {
+                    System.err.println("Nenhum equipamento cadastrado");
+                }
             } catch (Exception e) {
                 System.err.println("Insira uma data válida");
             }
-            try {
-                Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
-                chamados.add(c);
-            } catch (Exception e) {
-                System.err.println("Nenhum equipamento cadastrado");
-            }
+
         }
     }//GEN-LAST:event_bt_inserircActionPerformed
 
@@ -417,6 +425,13 @@ public class Janela extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         preencher();
     }//GEN-LAST:event_formWindowOpened
+
+    private void bt_removercActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removercActionPerformed
+        DefaultTableModel modele = (DefaultTableModel) table_equip.getModel();
+        int i = table_chamados.getSelectedRow();
+        chamados.remove(i);
+        modele.removeRow(i);       
+    }//GEN-LAST:event_bt_removercActionPerformed
 
     /**
      * @param args the command line arguments

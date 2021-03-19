@@ -1,6 +1,6 @@
 package Academia_do_Programador;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author JX
@@ -9,9 +9,9 @@ public class Chamados {
     private String chamado;
     private String desc;
     private Equipamentos equipamento;
-    private Date data_abertura;
+    private LocalDate data_abertura;
 
-    public Chamados(String chamado, String desc, Equipamentos equipamento, Date data_abertura) {
+    public Chamados(String chamado, String desc, Equipamentos equipamento, LocalDate data_abertura) {
         this.chamado = chamado;
         this.desc = desc;
         this.equipamento = equipamento;
@@ -42,11 +42,11 @@ public class Chamados {
         this.equipamento = equipamento;
     }
 
-    public Date getData_abertura() {
+    public LocalDate getData_abertura() {
         return data_abertura;
     }
 
-    public void setData_abertura(Date data_abertura) {
+    public void setData_abertura(LocalDate data_abertura) {
         this.data_abertura = data_abertura;
     }
 }
