@@ -4,17 +4,33 @@
  * and open the template in the editor.
  */
 package Academia_do_Programador;
+
+import java.text.ParseException;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.MaskFormatter;
+
 /**
  * @author JX
  */
 public class Janela extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Janela
-     */
+    ArrayList<Equipamentos> equipamentos = new ArrayList();
+    ArrayList<Chamados> chamados = new ArrayList();
+
     public Janela() {
         initComponents();
+        try {
+            MaskFormatter maskData = new MaskFormatter("##/##/####");
+            maskData.install(tf_data_fabr);
+            maskData.install(tf_data_ab);
+        } catch (ParseException ex) {
+            System.out.println("bo nas mask");
+        }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -88,9 +104,20 @@ public class Janela extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        Abas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AbasMouseClicked(evt);
+            }
+        });
+
         tf_data_fabr.setPreferredSize(new java.awt.Dimension(15, 24));
 
         bt_inserire.setText("Inserir");
+        bt_inserire.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_inserireActionPerformed(evt);
+            }
+        });
 
         bt_editare.setText("Editar");
 
@@ -132,9 +159,9 @@ public class Janela extends javax.swing.JFrame {
         panel_equipamentosLayout.setHorizontalGroup(
             panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_equipamentosLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panel_equipamentosLayout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -159,9 +186,7 @@ public class Janela extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tf_data_fabr, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 16, Short.MAX_VALUE))
-                    .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane6)))
+                    .addComponent(jScrollPane6))
                 .addContainerGap())
             .addGroup(panel_equipamentosLayout.createSequentialGroup()
                 .addGap(111, 111, 111)
@@ -222,6 +247,11 @@ public class Janela extends javax.swing.JFrame {
         tf_data_ab.setPreferredSize(new java.awt.Dimension(15, 24));
 
         bt_inserirc.setText("Inserir");
+        bt_inserirc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_inserircActionPerformed(evt);
+            }
+        });
 
         bt_editarc.setText("Editar");
 
@@ -245,8 +275,6 @@ public class Janela extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        table_chamados.setMaximumSize(new java.awt.Dimension(0, 0));
-        table_chamados.setMinimumSize(new java.awt.Dimension(0, 0));
         jScrollPane5.setViewportView(table_chamados);
 
         javax.swing.GroupLayout panel_chamadosLayout = new javax.swing.GroupLayout(panel_chamados);
@@ -341,6 +369,88 @@ public class Janela extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private Object validar() {
+
+        return null;
+    }
+
+    private void limpar() {
+        tf_nome.setText("");
+        tf_preco.setText("");;
+        tf_nr_serie.setText("");
+        tf_data_fabr.setText("");
+        tf_fabricante.setText("");
+        tf_chamado.setText("");
+        tf_desc.setText("");
+        tf_data_ab.setText("");
+    }
+
+    private void bt_inserireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserireActionPerformed
+        double preco = 0;
+        String nome = tf_nome.getText();
+        int nro_serie = 0;
+        String fabricante = tf_fabricante.getText();
+
+        LocalTime data_abertura = null;
+
+        if (nome != "" & nome.length() < 6) {
+            System.err.println("Insira um nome com mais de 6 caracteres");
+        } else if (fabricante == "") {
+            System.err.println("Insira um Fabricante");
+        }else{
+        try {
+            preco = Double.parseDouble(tf_preco.getText());
+            try {
+                nro_serie = Integer.parseInt(tf_nr_serie.getText());
+                try {
+                    data_abertura.parse(tf_data_fabr.getText());
+                } catch (Exception e) {
+                    System.err.println("Insira uma data válida");
+                    System.out.println(data_abertura);
+                }
+            } catch (Exception e) {
+                System.err.println("Insira um numero de série válido!!!");
+            }
+        } catch (Exception e) {
+            System.err.println("Insira um preço válido!!!");
+        }
+        }
+
+        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_abertura, fabricante);
+        equipamentos.add(equipa);
+    }//GEN-LAST:event_bt_inserireActionPerformed
+
+    private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
+        String chamado = tf_chamado.getText();
+        String desc = tf_desc.getText();
+
+        LocalTime data_fabr = null;
+        data_fabr.parse(tf_data_fabr.getText());
+
+        int dias = 0;
+
+        if (chamado != "") {
+            System.err.println("Insira um título");
+        } else if (desc == "") {
+            System.err.println("Insira uma descrição");
+        } else if (data_fabr == null) {
+            System.err.println("Insira uma data válida");
+        } else {
+            try {
+                Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_fabr);
+                chamados.add(c);
+            } catch (Exception e) {
+                System.err.println("Nenhum equipamento cadastrado");
+            }
+        }
+    }//GEN-LAST:event_bt_inserircActionPerformed
+
+    private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
+        cb_equip.removeAllItems();
+        for (Equipamentos u : equipamentos) {
+            cb_equip.addItem(u.toString());
+        }
+    }//GEN-LAST:event_AbasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -356,16 +466,24 @@ public class Janela extends javax.swing.JFrame {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Janela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Janela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Janela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Janela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Janela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Janela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Janela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Janela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>

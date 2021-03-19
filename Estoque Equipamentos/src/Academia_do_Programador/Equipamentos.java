@@ -8,9 +8,9 @@ import java.time.LocalTime;
 public class Equipamentos {
     private String nome;
     private double preco;
-    private String nro_serie;
+    private int nro_serie;
 
-    public Equipamentos(String nome, double preco, String nro_serie, LocalTime data_fabricacao, String fabricante) {
+    public Equipamentos(String nome, double preco, int nro_serie, LocalTime data_fabricacao, String fabricante) {
         this.nome = nome;
         this.preco = preco;
         this.nro_serie = nro_serie;
@@ -34,11 +34,11 @@ public class Equipamentos {
         this.preco = preco;
     }
 
-    public String getNro_serie() {
+    public int getNro_serie() {
         return nro_serie;
     }
 
-    public void setNro_serie(String nro_serie) {
+    public void setNro_serie(int nro_serie) {
         this.nro_serie = nro_serie;
     }
 
