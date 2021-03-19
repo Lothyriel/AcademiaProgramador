@@ -1,11 +1,12 @@
 package Academia_do_Programador;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * @author JX
  */
-public class Chamados {
+public class Chamados implements Serializable{
     private int chamado;
     private String desc;
     private Equipamentos equipamento;
@@ -49,4 +50,9 @@ public class Chamados {
     public void setData_abertura(LocalDate data_abertura) {
         this.data_abertura = data_abertura;
     }
+    @Override
+    public String toString() {
+        return "Chamados{" + "chamado=" + chamado + ", desc=" + desc + ", equipamento=" + equipamento + ", data_abertura=" + data_abertura + '}';
+    }
+    
 }

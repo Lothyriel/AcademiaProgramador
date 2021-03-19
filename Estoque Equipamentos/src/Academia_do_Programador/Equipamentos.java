@@ -1,12 +1,12 @@
 package Academia_do_Programador;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * @author JX
  */
-public class Equipamentos {
+public class Equipamentos implements Serializable{
     private String nome;
     private double preco;
     private int nro_serie;
@@ -60,4 +60,10 @@ public class Equipamentos {
     public void setFabricante(String fabricante) {
         this.fabricante = fabricante;
     }
+
+    @Override
+    public String toString() {
+        return "Equipamentos{" + "nome=" + nome + ", preco=" + preco + ", nro_serie=" + nro_serie + ", data_fabricacao=" + data_fabricacao + ", fabricante=" + fabricante + '}';
+    }
+    
 }

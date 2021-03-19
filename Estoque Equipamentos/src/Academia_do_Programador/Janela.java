@@ -5,6 +5,11 @@
  */
 package Academia_do_Programador;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,7 +19,7 @@ import javax.swing.text.MaskFormatter;
 /**
  * @author JX
  */
-public class Janela extends javax.swing.JFrame {
+public class Janela extends javax.swing.JFrame implements Serializable {
 
     private ArrayList<Equipamentos> equipamentos = new ArrayList();
     private ArrayList<Chamados> chamados = new ArrayList();
@@ -105,6 +110,9 @@ public class Janela extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -366,6 +374,35 @@ public class Janela extends javax.swing.JFrame {
         }
     }
 
+    public void serializar(Listas s) {
+        try {
+            FileOutputStream arquivo = new FileOutputStream("listas.ser");
+            ObjectOutputStream out = new ObjectOutputStream(arquivo);
+            out.writeObject(s);
+            out.close();
+            arquivo.close();
+            System.out.println("Serializando");
+        } catch (Exception e) {
+            System.out.println("Erro na serialização!");
+        }
+    }
+
+    public Listas desserializar() {
+        try {
+            Listas l = null;
+
+            FileInputStream arquivo = new FileInputStream("listas.ser");
+            ObjectInputStream ois = new ObjectInputStream(arquivo);
+
+            l = (Listas) ois.readObject();
+            ois.close();
+            arquivo.close();
+            return l;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private void limpar() {
         tf_nome.setText("");
         tf_preco.setText("");
@@ -378,28 +415,11 @@ public class Janela extends javax.swing.JFrame {
     }
 
     private void bt_inserireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserireActionPerformed
-        inserire();
-    }//GEN-LAST:event_bt_inserireActionPerformed
-    private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
-        inserirc();
-    }//GEN-LAST:event_bt_inserircActionPerformed
-    private void inserire() {
         double preco = 0;
         String nome = tf_nome.getText();
         int nro_serie = -1, i = 0;
         String fabricante = tf_fabricante.getText();
         boolean existe = false;
-        try {
-            nro_serie = Integer.parseInt(tf_nr_serie.getText());
-        } catch (Exception e) {
-            System.err.println("Insira um numero de série válido!!!");
-        }
-        for (Equipamentos eq : equipamentos) {
-            i++;
-            if (eq.getNro_serie() == nro_serie) {
-                existe = true;
-            }
-        }
 
         LocalDate data_fabr = null;
 
@@ -412,69 +432,86 @@ public class Janela extends javax.swing.JFrame {
         } else {
             try {
                 preco = Double.parseDouble(tf_preco.getText());
-
                 try {
-                    data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
-                    Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
-                    equipamentos.add(equipa);
-                    System.out.println("CADASTRADO!");
-                    limpar();
-                    preencher();
+                    nro_serie = Integer.parseInt(tf_nr_serie.getText());
+                    for (Equipamentos eq : equipamentos) {
+                        i++;
+                        if (eq.getNro_serie() == nro_serie) {
+                            existe = true;
+                        }
+                    }
+                    try {
+                        data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
+                        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
+                        equipamentos.add(equipa);
+                        System.out.println("CADASTRADO!");
+                        limpar();
+                        preencher();
+                    } catch (Exception e) {
+                        System.err.println("Insira uma data válida");
+                    }
                 } catch (Exception e) {
-                    System.err.println("Insira uma data válida");
+                    System.err.println("Insira um número de série válido!!!");
                 }
             } catch (Exception e) {
                 System.err.println("Insira um preço válido!!!");
             }
         }
-    }
-
-    private void inserirc() {
+    }//GEN-LAST:event_bt_inserireActionPerformed
+    private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
         String desc = tf_desc.getText();
         int i = 0, chamado = -1;
         LocalDate data_ab = null;
         boolean existe = false;
+
         try {
             chamado = Integer.parseInt(tf_chamado.getText());
+            for (Chamados ch : chamados) {
+                i++;
+                if (ch.getChamado() == chamado) {
+                    existe = true;
+                }
+            }
+            if (desc.equals("")) {
+                System.err.println("Insira uma descrição");
+            } else if (existe == true) {
+
+                System.out.println("Chamado já inserido");
+            } else {
+                try {
+                    data_ab = data_ab.parse(tf_data_ab.getText(), f);
+                    try {
+                        Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
+                        chamados.add(c);
+                        System.out.println("CADASTRADO!!");
+                        preencher();
+                        limpar();
+                    } catch (Exception e) {
+                        System.err.println("Nenhum equipamento cadastrado");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Insira uma data válida");
+                }
+            }
         } catch (Exception e) {
             System.err.println("Insira um código de chamado válido");
         }
-        for (Chamados ch : chamados) {
-            i++;
-            if (ch.getChamado() == chamado) {
-                existe = true;
-            }
-        }
-        if (desc.equals("")) {
-            System.err.println("Insira uma descrição");
-        } else if (existe == true) {
-            System.out.println("Chamado já inserido");
-        } else {
-
-            try {
-                data_ab = data_ab.parse(tf_data_ab.getText(), f);
-                try {
-                    Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
-                    chamados.add(c);
-                    System.out.println("CADASTRADO!!");
-                    preencher();
-                    limpar();
-                } catch (Exception e) {
-                    System.err.println("Nenhum equipamento cadastrado");
-                }
-            } catch (Exception e) {
-                System.err.println("Insira uma data válida");
-            }
-        }
-    }
-
+    }//GEN-LAST:event_bt_inserircActionPerformed
 
     private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
         preencher();
     }//GEN-LAST:event_AbasMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        preencher();
+        try {
+            Listas s = desserializar();
+            equipamentos = s.getEquipamentos();
+            chamados = s.getChamados();
+            preencher();
+            System.out.println("Desserializando");
+        } catch (Exception e) {
+            System.out.println("Erro na desserialização");
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void bt_removercActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removercActionPerformed
@@ -518,7 +555,6 @@ public class Janela extends javax.swing.JFrame {
         } catch (Exception e) {
             System.err.println("Insira um numero de série já cadastrado!!!");
         }
-
         LocalDate data_fabr = null;
 
         if (nome.length() < 6) {
@@ -531,9 +567,7 @@ public class Janela extends javax.swing.JFrame {
             try {
                 preco = Double.parseDouble(tf_preco.getText());
                 try {
-                    System.out.println(tf_data_fabr.getText());
-                    data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
-                    Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
+                    Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr.parse(tf_data_fabr.getText()), fabricante);
                     equipamentos.set(i, equipa);
                     System.out.println("Editado!");
                     limpar();
@@ -606,6 +640,11 @@ public class Janela extends javax.swing.JFrame {
         tf_nr_serie.setText(Integer.toString(e.getNro_serie()));
         tf_data_fabr.setText(f.format(e.getData_fabricacao()));
     }//GEN-LAST:event_table_equipMouseClicked
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        Listas s = new Listas(equipamentos, chamados);
+        serializar(s);
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
