@@ -447,32 +447,7 @@ public class Janela extends javax.swing.JFrame {
             }
         }
     }
-
-    private void removere() {
-        int i = table_equip.getSelectedRow()-1;
-            System.out.println(i);
-            System.out.println(equipamentos.remove(i));
-        try {
-            DefaultTableModel modele = (DefaultTableModel) table_chamados.getModel();
-            i = table_equip.getSelectedRow();
-            equipamentos.remove(i);
-            modele.removeRow(i);
-        } catch (Exception e) {
-            System.err.println("Selecione uma linha para remover");
-        }
-    }
-
-    private void removerc() {
-        try {
-            DefaultTableModel modelc = (DefaultTableModel) table_chamados.getModel();
-            int i = table_chamados.getSelectedRow();
-            chamados.remove(i);
-            modelc.removeRow(i);
-        } catch (Exception e) {
-            System.err.println("Selecione uma linha para remover");
-        }
-    }
-
+    
     private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
         preencher();
     }//GEN-LAST:event_AbasMouseClicked
@@ -482,21 +457,97 @@ public class Janela extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void bt_removercActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removercActionPerformed
-        removerc();
+        try {
+            DefaultTableModel modelc = (DefaultTableModel) table_chamados.getModel();
+            int i = table_chamados.getSelectedRow();
+            chamados.remove(i);
+            modelc.removeRow(i);
+            limpar();
+        } catch (Exception e) {
+            System.err.println("Selecione uma linha para remover");
+        }
     }//GEN-LAST:event_bt_removercActionPerformed
 
     private void bt_removereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removereActionPerformed
-        removere();
+        try {
+            DefaultTableModel modele = (DefaultTableModel) table_equip.getModel();
+            int i = table_equip.getSelectedRow();
+            equipamentos.remove(i);
+            modele.removeRow(i);
+            limpar();
+        } catch (Exception e) {
+            System.err.println("Selecione uma linha para remover");
+        }
     }//GEN-LAST:event_bt_removereActionPerformed
 
     private void bt_editareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editareActionPerformed
-        removere();
-        inserire();
+        double preco = 0;
+        String nome = tf_nome.getText();
+        int nro_serie = -1;
+        String fabricante = tf_fabricante.getText();
+        boolean existe;
+
+        LocalDate data_fabr = null;
+
+        if (nome.length() < 6) {
+            System.err.println("Insira um nome com mais de 6 caracteres");
+        } else if (fabricante.equals("")) {
+            System.err.println("Insira um Fabricante");
+        } else {
+            try {
+                preco = Double.parseDouble(tf_preco.getText());
+                try {
+                    nro_serie = Integer.parseInt(tf_nr_serie.getText());
+                    for (Equipamentos e : equipamentos) {
+                        if (e.getNro_serie() == nro_serie) {
+
+                        }
+                    }
+                    try {
+                        data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
+                        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
+                        equipamentos.add(equipa);
+                        System.out.println("Editado!");
+                        limpar();
+                        preencher();
+                    } catch (Exception e) {
+                        System.err.println("Insira uma data válida");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Insira um numero de série já cadastrado!!!");
+                }
+            } catch (Exception e) {
+                System.err.println("Insira um preço válido!!!");
+            }
+        }
     }//GEN-LAST:event_bt_editareActionPerformed
 
     private void bt_editarcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editarcActionPerformed
-        inserirc();
-        removerc();
+        String chamado = tf_chamado.getText();
+        String desc = tf_desc.getText();
+
+        LocalDate data_ab = null;
+
+        if (chamado.equals("")) {
+            System.err.println("Insira um título");
+        } else if (desc.equals("")) {
+            System.err.println("Insira uma descrição");
+        } else {
+            try {
+                data_ab = data_ab.parse(tf_data_ab.getText(), f);
+                try {
+                    Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
+                    chamados.add(c);
+                    System.out.println("CADASTRADO!!");
+                    preencher();
+                    limpar();
+                } catch (Exception e) {
+                    System.err.println("Nenhum equipamento cadastrado");
+                }
+            } catch (Exception e) {
+                System.err.println("Insira uma data válida");
+            }
+        }
     }//GEN-LAST:event_bt_editarcActionPerformed
 
     private void table_chamadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_chamadosMouseClicked
