@@ -359,11 +359,10 @@ public class Janela extends javax.swing.JFrame {
             modele.addRow(new String[]{u.getNome(), s, u.getFabricante()});
         }
 
-        modelc.setRowCount(
-                0);
+        modelc.setRowCount(0);
         for (Chamados u : chamados) {
             s = Integer.toString(10);
-            modelc.addRow(new String[]{u.getChamado(), u.getEquipamento().getNome(), f.format(u.getData_abertura()), s});
+            modelc.addRow(new String[]{Integer.toString(u.getChamado()), u.getEquipamento().getNome(), f.format(u.getData_abertura()), s});
         }
     }
 
@@ -387,8 +386,20 @@ public class Janela extends javax.swing.JFrame {
     private void inserire() {
         double preco = 0;
         String nome = tf_nome.getText();
-        int nro_serie = -1;
+        int nro_serie = -1, i = 0;
         String fabricante = tf_fabricante.getText();
+        boolean existe = false;
+        try {
+            nro_serie = Integer.parseInt(tf_nr_serie.getText());
+        } catch (Exception e) {
+            System.err.println("Insira um numero de série válido!!!");
+        }
+        for (Equipamentos eq : equipamentos) {
+            i++;
+            if (eq.getNro_serie() == nro_serie) {
+                existe = true;
+            }
+        }
 
         LocalDate data_fabr = null;
 
@@ -396,23 +407,21 @@ public class Janela extends javax.swing.JFrame {
             System.err.println("Insira um nome com mais de 6 caracteres");
         } else if (fabricante.equals("")) {
             System.err.println("Insira um Fabricante");
+        } else if (existe == true) {
+            System.out.println("Número de série ja cadastrado");
         } else {
             try {
                 preco = Double.parseDouble(tf_preco.getText());
+
                 try {
-                    nro_serie = Integer.parseInt(tf_nr_serie.getText());
-                    try {
-                        data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
-                        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
-                        equipamentos.add(equipa);
-                        System.out.println("CADASTRADO!");
-                        limpar();
-                        preencher();
-                    } catch (Exception e) {
-                        System.err.println("Insira uma data válida");
-                    }
+                    data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
+                    Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
+                    equipamentos.add(equipa);
+                    System.out.println("CADASTRADO!");
+                    limpar();
+                    preencher();
                 } catch (Exception e) {
-                    System.err.println("Insira um numero de série válido!!!");
+                    System.err.println("Insira uma data válida");
                 }
             } catch (Exception e) {
                 System.err.println("Insira um preço válido!!!");
@@ -421,16 +430,27 @@ public class Janela extends javax.swing.JFrame {
     }
 
     private void inserirc() {
-        String chamado = tf_chamado.getText();
         String desc = tf_desc.getText();
-
+        int i = 0, chamado = -1;
         LocalDate data_ab = null;
-
-        if (chamado.equals("")) {
-            System.err.println("Insira um título");
-        } else if (desc.equals("")) {
+        boolean existe = false;
+        try {
+            chamado = Integer.parseInt(tf_chamado.getText());
+        } catch (Exception e) {
+            System.err.println("Insira um código de chamado válido");
+        }
+        for (Chamados ch : chamados) {
+            i++;
+            if (ch.getChamado() == chamado) {
+                existe = true;
+            }
+        }
+        if (desc.equals("")) {
             System.err.println("Insira uma descrição");
+        } else if (existe == true) {
+            System.out.println("Chamado já inserido");
         } else {
+
             try {
                 data_ab = data_ab.parse(tf_data_ab.getText(), f);
                 try {
@@ -447,7 +467,8 @@ public class Janela extends javax.swing.JFrame {
             }
         }
     }
-    
+
+
     private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
         preencher();
     }//GEN-LAST:event_AbasMouseClicked
@@ -483,9 +504,20 @@ public class Janela extends javax.swing.JFrame {
     private void bt_editareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editareActionPerformed
         double preco = 0;
         String nome = tf_nome.getText();
-        int nro_serie = -1;
+        int nro_serie = -1, i = 0;
         String fabricante = tf_fabricante.getText();
-        boolean existe;
+        boolean existe = false;
+        try {
+            nro_serie = Integer.parseInt(tf_nr_serie.getText());
+            for (Equipamentos e : equipamentos) {
+                i++;
+                if (e.getNro_serie() == nro_serie) {
+                    existe = true;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Insira um numero de série já cadastrado!!!");
+        }
 
         LocalDate data_fabr = null;
 
@@ -493,28 +525,21 @@ public class Janela extends javax.swing.JFrame {
             System.err.println("Insira um nome com mais de 6 caracteres");
         } else if (fabricante.equals("")) {
             System.err.println("Insira um Fabricante");
+        } else if (existe == false) {
+            System.out.println("Insira um número de série ja cadastrado");
         } else {
             try {
                 preco = Double.parseDouble(tf_preco.getText());
                 try {
-                    nro_serie = Integer.parseInt(tf_nr_serie.getText());
-                    for (Equipamentos e : equipamentos) {
-                        if (e.getNro_serie() == nro_serie) {
-
-                        }
-                    }
-                    try {
-                        data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
-                        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
-                        equipamentos.add(equipa);
-                        System.out.println("Editado!");
-                        limpar();
-                        preencher();
-                    } catch (Exception e) {
-                        System.err.println("Insira uma data válida");
-                    }
+                    System.out.println(tf_data_fabr.getText());
+                    data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
+                    Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
+                    equipamentos.set(i, equipa);
+                    System.out.println("Editado!");
+                    limpar();
+                    preencher();
                 } catch (Exception e) {
-                    System.err.println("Insira um numero de série já cadastrado!!!");
+                    System.err.println("Insira uma data válida");
                 }
             } catch (Exception e) {
                 System.err.println("Insira um preço válido!!!");
@@ -523,22 +548,34 @@ public class Janela extends javax.swing.JFrame {
     }//GEN-LAST:event_bt_editareActionPerformed
 
     private void bt_editarcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editarcActionPerformed
-        String chamado = tf_chamado.getText();
         String desc = tf_desc.getText();
-
+        int i = 0, chamado = -1;
         LocalDate data_ab = null;
+        boolean existe = false;
+        try {
+            chamado = Integer.parseInt(tf_chamado.getText());
+        } catch (Exception e) {
+            System.err.println("Insira um código de chamado ja cadastrado");
+        }
+        for (Chamados ch : chamados) {
+            i++;
+            if (ch.getChamado() == chamado) {
+                existe = true;
+            }
+        }
 
-        if (chamado.equals("")) {
-            System.err.println("Insira um título");
-        } else if (desc.equals("")) {
+        if (desc.equals("")) {
             System.err.println("Insira uma descrição");
+        } else if (existe == false) {
+            System.out.println("Insira um chamdo ja cadastrado");
         } else {
+
             try {
                 data_ab = data_ab.parse(tf_data_ab.getText(), f);
                 try {
                     Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
-                    chamados.add(c);
-                    System.out.println("CADASTRADO!!");
+                    chamados.set(i, c);
+                    System.out.println("EDITADO!!!");
                     preencher();
                     limpar();
                 } catch (Exception e) {
@@ -553,7 +590,7 @@ public class Janela extends javax.swing.JFrame {
     private void table_chamadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_chamadosMouseClicked
         int i = table_chamados.getSelectedRow();
         Chamados c = chamados.get(i);
-        tf_chamado.setText(c.getChamado());
+        tf_chamado.setText(Integer.toString(c.getChamado()));
         tf_desc.setText(c.getDesc());
         cb_equip.setSelectedIndex(i);
         tf_data_ab.setText(f.format(c.getData_abertura()));

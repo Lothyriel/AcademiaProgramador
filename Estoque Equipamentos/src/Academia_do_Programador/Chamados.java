@@ -6,23 +6,23 @@ import java.time.LocalDate;
  * @author JX
  */
 public class Chamados {
-    private String chamado;
+    private int chamado;
     private String desc;
     private Equipamentos equipamento;
     private LocalDate data_abertura;
 
-    public Chamados(String chamado, String desc, Equipamentos equipamento, LocalDate data_abertura) {
+    public Chamados(int chamado, String desc, Equipamentos equipamento, LocalDate data_abertura) {
         this.chamado = chamado;
         this.desc = desc;
         this.equipamento = equipamento;
         this.data_abertura = data_abertura;
     }
 
-    public String getChamado() {
+    public int getChamado() {
         return chamado;
     }
 
-    public void setChamado(String chamado) {
+    public void setChamado(int chamado) {
         this.chamado = chamado;
     }
 
