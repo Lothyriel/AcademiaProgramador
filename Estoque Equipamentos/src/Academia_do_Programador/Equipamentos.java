@@ -1,6 +1,6 @@
 package Academia_do_Programador;
 
-import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * @author JX
@@ -9,8 +9,10 @@ public class Equipamentos {
     private String nome;
     private double preco;
     private int nro_serie;
+    private Date data_fabricacao;
+    private String fabricante;
 
-    public Equipamentos(String nome, double preco, int nro_serie, LocalTime data_fabricacao, String fabricante) {
+    public Equipamentos(String nome, double preco, int nro_serie, Date data_fabricacao, String fabricante) {
         this.nome = nome;
         this.preco = preco;
         this.nro_serie = nro_serie;
@@ -42,11 +44,11 @@ public class Equipamentos {
         this.nro_serie = nro_serie;
     }
 
-    public LocalTime getData_fabricacao() {
+    public Date getData_fabricacao() {
         return data_fabricacao;
     }
 
-    public void setData_fabricacao(LocalTime data_fabricacao) {
+    public void setData_fabricacao(Date data_fabricacao) {
         this.data_fabricacao = data_fabricacao;
     }
 
@@ -57,6 +59,4 @@ public class Equipamentos {
     public void setFabricante(String fabricante) {
         this.fabricante = fabricante;
     }
-    private LocalTime data_fabricacao;
-    private String fabricante;
 }

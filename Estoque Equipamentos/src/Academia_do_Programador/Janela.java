@@ -6,10 +6,9 @@
 package Academia_do_Programador;
 
 import java.text.ParseException;
-import java.time.LocalTime;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Date;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -24,8 +23,17 @@ public class Janela extends javax.swing.JFrame {
         initComponents();
         try {
             MaskFormatter maskData = new MaskFormatter("##/##/####");
+            MaskFormatter maskData2 = new MaskFormatter("##/##/####");
             maskData.install(tf_data_fabr);
-            maskData.install(tf_data_ab);
+            maskData2.install(tf_data_ab);
+            
+            Date data;                                                              //////EXCLUIR
+            SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+            data = f.parse("27/04/2010");
+
+            Equipamentos equipa = new Equipamentos("1", 1, 1, data, "sexo");
+            equipamentos.add(equipa);
+
         } catch (ParseException ex) {
             System.out.println("bo nas mask");
         }
@@ -110,7 +118,14 @@ public class Janela extends javax.swing.JFrame {
             }
         });
 
+        panel_equipamentos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panel_equipamentos.add(tf_nome, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 372, 137, -1));
+        panel_equipamentos.add(tf_preco, new org.netbeans.lib.awtextra.AbsoluteConstraints(355, 372, 137, -1));
+        panel_equipamentos.add(tf_nr_serie, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 413, 137, -1));
+        panel_equipamentos.add(tf_fabricante, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 455, 137, -1));
+
         tf_data_fabr.setPreferredSize(new java.awt.Dimension(15, 24));
+        panel_equipamentos.add(tf_data_fabr, new org.netbeans.lib.awtextra.AbsoluteConstraints(355, 455, 137, 20));
 
         bt_inserire.setText("Inserir");
         bt_inserire.addActionListener(new java.awt.event.ActionListener() {
@@ -118,20 +133,28 @@ public class Janela extends javax.swing.JFrame {
                 bt_inserireActionPerformed(evt);
             }
         });
+        panel_equipamentos.add(bt_inserire, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 520, 83, -1));
 
         bt_editare.setText("Editar");
+        panel_equipamentos.add(bt_editare, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 520, 83, -1));
 
         bt_removere.setText("Remover");
+        panel_equipamentos.add(bt_removere, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 520, 83, -1));
 
         jLabel1.setText("Nome:");
+        panel_equipamentos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 376, 35, -1));
 
         jLabel2.setText("Nro de Série: ");
+        panel_equipamentos.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 417, -1, -1));
 
         jLabel3.setText("Fabricante:");
+        panel_equipamentos.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 459, 59, -1));
 
         jLabel4.setText("Preço: ");
+        panel_equipamentos.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(308, 376, 41, -1));
 
         jLabel5.setText("Data Fabricação:");
+        panel_equipamentos.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(259, 457, -1, -1));
 
         table_chamados1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -154,83 +177,7 @@ public class Janela extends javax.swing.JFrame {
         });
         jScrollPane6.setViewportView(table_chamados1);
 
-        javax.swing.GroupLayout panel_equipamentosLayout = new javax.swing.GroupLayout(panel_equipamentos);
-        panel_equipamentos.setLayout(panel_equipamentosLayout);
-        panel_equipamentosLayout.setHorizontalGroup(
-            panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                        .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tf_fabricante, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tf_nome, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tf_nr_serie, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(39, 39, 39)
-                        .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tf_preco, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tf_data_fabr, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 16, Short.MAX_VALUE))
-                    .addComponent(jScrollPane6))
-                .addContainerGap())
-            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                .addGap(111, 111, 111)
-                .addComponent(bt_inserire, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(bt_editare, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(bt_removere, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panel_equipamentosLayout.setVerticalGroup(
-            panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                        .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tf_nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addGap(17, 17, 17)
-                        .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tf_nr_serie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tf_fabricante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)))
-                    .addGroup(panel_equipamentosLayout.createSequentialGroup()
-                        .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tf_preco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addGap(59, 59, 59)
-                        .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(tf_data_fabr, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addGroup(panel_equipamentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bt_removere)
-                    .addComponent(bt_editare)
-                    .addComponent(bt_inserire))
-                .addGap(19, 19, 19))
-        );
+        panel_equipamentos.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 502, 354));
 
         Abas.addTab("Equipamentos", panel_equipamentos);
 
@@ -355,13 +302,13 @@ public class Janela extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Abas, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(Abas)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(Abas)
                 .addContainerGap())
@@ -369,11 +316,6 @@ public class Janela extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private Object validar() {
-
-        return null;
-    }
-
     private void limpar() {
         tf_nome.setText("");
         tf_preco.setText("");;
@@ -388,44 +330,43 @@ public class Janela extends javax.swing.JFrame {
     private void bt_inserireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserireActionPerformed
         double preco = 0;
         String nome = tf_nome.getText();
-        int nro_serie = 0;
+        int nro_serie = -1;
         String fabricante = tf_fabricante.getText();
 
-        LocalTime data_abertura = null;
+        Date data_fabr = null;
 
-        if (nome != "" & nome.length() < 6) {
+        if (nome.length() < 6) {
             System.err.println("Insira um nome com mais de 6 caracteres");
-        } else if (fabricante == "") {
+        } else if (fabricante.equals("")) {
             System.err.println("Insira um Fabricante");
-        }else{
-        try {
-            preco = Double.parseDouble(tf_preco.getText());
+        } else {
             try {
-                nro_serie = Integer.parseInt(tf_nr_serie.getText());
+                preco = Double.parseDouble(tf_preco.getText());
                 try {
-                    data_abertura.parse(tf_data_fabr.getText());
+                    nro_serie = Integer.parseInt(tf_nr_serie.getText());
+                    try {
+                        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+                        data_fabr = f.parse(tf_data_fabr.getText());
+                        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
+                        equipamentos.add(equipa);
+                    } catch (Exception e) {
+                        System.err.println("Insira uma data válida");
+                    }
                 } catch (Exception e) {
-                    System.err.println("Insira uma data válida");
-                    System.out.println(data_abertura);
+                    System.err.println("Insira um numero de série válido!!!");
                 }
             } catch (Exception e) {
-                System.err.println("Insira um numero de série válido!!!");
+                System.err.println("Insira um preço válido!!!");
             }
-        } catch (Exception e) {
-            System.err.println("Insira um preço válido!!!");
-        }
         }
 
-        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_abertura, fabricante);
-        equipamentos.add(equipa);
     }//GEN-LAST:event_bt_inserireActionPerformed
 
     private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
         String chamado = tf_chamado.getText();
         String desc = tf_desc.getText();
 
-        LocalTime data_fabr = null;
-        data_fabr.parse(tf_data_fabr.getText());
+        Date data_ab = null;
 
         int dias = 0;
 
@@ -433,11 +374,15 @@ public class Janela extends javax.swing.JFrame {
             System.err.println("Insira um título");
         } else if (desc == "") {
             System.err.println("Insira uma descrição");
-        } else if (data_fabr == null) {
-            System.err.println("Insira uma data válida");
         } else {
             try {
-                Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_fabr);
+                SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+                data_ab = f.parse(tf_data_ab.getText());
+            } catch (Exception e) {
+                System.err.println("Insira uma data válida");
+            }
+            try {
+                Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
                 chamados.add(c);
             } catch (Exception e) {
                 System.err.println("Nenhum equipamento cadastrado");
@@ -448,7 +393,7 @@ public class Janela extends javax.swing.JFrame {
     private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
         cb_equip.removeAllItems();
         for (Equipamentos u : equipamentos) {
-            cb_equip.addItem(u.toString());
+            cb_equip.addItem(u.getNome());
         }
     }//GEN-LAST:event_AbasMouseClicked
 
