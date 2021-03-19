@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -21,12 +22,13 @@ public class Janela extends javax.swing.JFrame {
 
     public Janela() {
         initComponents();
+        preencher();
         try {
             MaskFormatter maskData = new MaskFormatter("##/##/####");
             MaskFormatter maskData2 = new MaskFormatter("##/##/####");
             maskData.install(tf_data_fabr);
             maskData2.install(tf_data_ab);
-            
+
             Date data;                                                              //////EXCLUIR
             SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
             data = f.parse("27/04/2010");
@@ -68,7 +70,7 @@ public class Janela extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        table_chamados1 = new javax.swing.JTable();
+        table_equip = new javax.swing.JTable();
         panel_chamados = new javax.swing.JPanel();
         bt_removerc = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
@@ -111,6 +113,11 @@ public class Janela extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable4);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         Abas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -156,7 +163,7 @@ public class Janela extends javax.swing.JFrame {
         jLabel5.setText("Data Fabricação:");
         panel_equipamentos.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(259, 457, -1, -1));
 
-        table_chamados1.setModel(new javax.swing.table.DefaultTableModel(
+        table_equip.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -175,7 +182,7 @@ public class Janela extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane6.setViewportView(table_chamados1);
+        jScrollPane6.setViewportView(table_equip);
 
         panel_equipamentos.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 502, 354));
 
@@ -316,6 +323,18 @@ public class Janela extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private void preencher() {
+        DefaultTableModel model = (DefaultTableModel) table_equip.getModel();
+        String s;
+        cb_equip.removeAllItems();
+        model.setRowCount(0);
+        for (Equipamentos u : equipamentos) {
+            s = Integer.toString(u.getNro_serie());
+            cb_equip.addItem(u.getNome());
+            model.addRow(new String[]{u.getNome(), s, "Fabricante"});
+        }
+    }
+
     private void limpar() {
         tf_nome.setText("");
         tf_preco.setText("");;
@@ -349,6 +368,7 @@ public class Janela extends javax.swing.JFrame {
                         data_fabr = f.parse(tf_data_fabr.getText());
                         Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
                         equipamentos.add(equipa);
+                        limpar();
                     } catch (Exception e) {
                         System.err.println("Insira uma data válida");
                     }
@@ -391,11 +411,12 @@ public class Janela extends javax.swing.JFrame {
     }//GEN-LAST:event_bt_inserircActionPerformed
 
     private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
-        cb_equip.removeAllItems();
-        for (Equipamentos u : equipamentos) {
-            cb_equip.addItem(u.getNome());
-        }
+        preencher();
     }//GEN-LAST:event_AbasMouseClicked
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        preencher();
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -468,7 +489,7 @@ public class Janela extends javax.swing.JFrame {
     private javax.swing.JPanel panel_chamados;
     private javax.swing.JPanel panel_equipamentos;
     private javax.swing.JTable table_chamados;
-    private javax.swing.JTable table_chamados1;
+    private javax.swing.JTable table_equip;
     private javax.swing.JTextField tf_chamado;
     private javax.swing.JFormattedTextField tf_data_ab;
     private javax.swing.JFormattedTextField tf_data_fabr;
