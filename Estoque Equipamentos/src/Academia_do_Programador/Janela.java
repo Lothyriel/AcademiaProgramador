@@ -11,7 +11,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
@@ -369,8 +371,8 @@ public class Janela extends javax.swing.JFrame implements Serializable {
 
         modelc.setRowCount(0);
         for (Chamados u : chamados) {
-            s = Integer.toString(10);
-            modelc.addRow(new String[]{Integer.toString(u.getChamado()), u.getEquipamento().getNome(), f.format(u.getData_abertura()), s});
+            long d = u.getData_abertura().until(LocalDate.now(), ChronoUnit.DAYS);
+            modelc.addRow(new String[]{Integer.toString(u.getChamado()), u.getEquipamento().getNome(), f.format(u.getData_abertura()), Long.toString(d)});
         }
     }
 
@@ -422,24 +424,24 @@ public class Janela extends javax.swing.JFrame implements Serializable {
         boolean existe = false;
 
         LocalDate data_fabr = null;
-
-        if (nome.length() < 6) {
-            System.err.println("Insira um nome com mais de 6 caracteres");
-        } else if (fabricante.equals("")) {
-            System.err.println("Insira um Fabricante");
-        } else if (existe == true) {
-            System.out.println("Número de série ja cadastrado");
-        } else {
-            try {
-                preco = Double.parseDouble(tf_preco.getText());
+        try {
+            nro_serie = Integer.parseInt(tf_nr_serie.getText());
+            for (Equipamentos eq : equipamentos) {
+                i++;
+                if (eq.getNro_serie() == nro_serie) {
+                    existe = true;
+                }
+            }
+            if (nome.length() < 6) {
+                System.err.println("Insira um nome com mais de 6 caracteres");
+            } else if (fabricante.equals("")) {
+                System.err.println("Insira um Fabricante");
+            } else if (existe == true) {
+                System.out.println("Número de série ja cadastrado");
+            } else {
                 try {
-                    nro_serie = Integer.parseInt(tf_nr_serie.getText());
-                    for (Equipamentos eq : equipamentos) {
-                        i++;
-                        if (eq.getNro_serie() == nro_serie) {
-                            existe = true;
-                        }
-                    }
+                    preco = Double.parseDouble(tf_preco.getText());
+
                     try {
                         data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
                         Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
@@ -451,11 +453,11 @@ public class Janela extends javax.swing.JFrame implements Serializable {
                         System.err.println("Insira uma data válida");
                     }
                 } catch (Exception e) {
-                    System.err.println("Insira um número de série válido!!!");
+                    System.err.println("Insira um preço válido!!!");
                 }
-            } catch (Exception e) {
-                System.err.println("Insira um preço válido!!!");
             }
+        } catch (Exception e) {
+            System.out.println("Insira um numero de série válido");
         }
     }//GEN-LAST:event_bt_inserireActionPerformed
     private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
