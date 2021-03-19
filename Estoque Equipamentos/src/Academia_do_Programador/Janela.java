@@ -103,7 +103,7 @@ public class Janela extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable4);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -134,9 +134,19 @@ public class Janela extends javax.swing.JFrame {
         panel_equipamentos.add(bt_inserire, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 520, 83, -1));
 
         bt_editare.setText("Editar");
+        bt_editare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_editareActionPerformed(evt);
+            }
+        });
         panel_equipamentos.add(bt_editare, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 520, 83, -1));
 
         bt_removere.setText("Remover");
+        bt_removere.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_removereActionPerformed(evt);
+            }
+        });
         panel_equipamentos.add(bt_removere, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 520, 83, -1));
 
         jLabel1.setText("Nome:");
@@ -173,9 +183,14 @@ public class Janela extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        table_equip.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_equipMouseClicked(evt);
+            }
+        });
         jScrollPane6.setViewportView(table_equip);
 
-        panel_equipamentos.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 502, 354));
+        panel_equipamentos.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 502, 354));
 
         Abas.addTab("Equipamentos", panel_equipamentos);
 
@@ -204,6 +219,11 @@ public class Janela extends javax.swing.JFrame {
         });
 
         bt_editarc.setText("Editar");
+        bt_editarc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_editarcActionPerformed(evt);
+            }
+        });
 
         table_chamados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -223,6 +243,11 @@ public class Janela extends javax.swing.JFrame {
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+        });
+        table_chamados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_chamadosMouseClicked(evt);
             }
         });
         jScrollPane5.setViewportView(table_chamados);
@@ -354,6 +379,12 @@ public class Janela extends javax.swing.JFrame {
     }
 
     private void bt_inserireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserireActionPerformed
+        inserire();
+    }//GEN-LAST:event_bt_inserireActionPerformed
+    private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
+        inserirc();
+    }//GEN-LAST:event_bt_inserircActionPerformed
+    private void inserire() {
         double preco = 0;
         String nome = tf_nome.getText();
         int nro_serie = -1;
@@ -374,6 +405,7 @@ public class Janela extends javax.swing.JFrame {
                         data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
                         Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
                         equipamentos.add(equipa);
+                        System.out.println("CADASTRADO!");
                         limpar();
                         preencher();
                     } catch (Exception e) {
@@ -386,10 +418,9 @@ public class Janela extends javax.swing.JFrame {
                 System.err.println("Insira um preço válido!!!");
             }
         }
+    }
 
-    }//GEN-LAST:event_bt_inserireActionPerformed
-
-    private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
+    private void inserirc() {
         String chamado = tf_chamado.getText();
         String desc = tf_desc.getText();
 
@@ -414,9 +445,33 @@ public class Janela extends javax.swing.JFrame {
             } catch (Exception e) {
                 System.err.println("Insira uma data válida");
             }
-
         }
-    }//GEN-LAST:event_bt_inserircActionPerformed
+    }
+
+    private void removere() {
+        int i = table_equip.getSelectedRow()-1;
+            System.out.println(i);
+            System.out.println(equipamentos.remove(i));
+        try {
+            DefaultTableModel modele = (DefaultTableModel) table_chamados.getModel();
+            i = table_equip.getSelectedRow();
+            equipamentos.remove(i);
+            modele.removeRow(i);
+        } catch (Exception e) {
+            System.err.println("Selecione uma linha para remover");
+        }
+    }
+
+    private void removerc() {
+        try {
+            DefaultTableModel modelc = (DefaultTableModel) table_chamados.getModel();
+            int i = table_chamados.getSelectedRow();
+            chamados.remove(i);
+            modelc.removeRow(i);
+        } catch (Exception e) {
+            System.err.println("Selecione uma linha para remover");
+        }
+    }
 
     private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
         preencher();
@@ -427,11 +482,42 @@ public class Janela extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void bt_removercActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removercActionPerformed
-        DefaultTableModel modele = (DefaultTableModel) table_equip.getModel();
-        int i = table_chamados.getSelectedRow();
-        chamados.remove(i);
-        modele.removeRow(i);       
+        removerc();
     }//GEN-LAST:event_bt_removercActionPerformed
+
+    private void bt_removereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removereActionPerformed
+        removere();
+    }//GEN-LAST:event_bt_removereActionPerformed
+
+    private void bt_editareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editareActionPerformed
+        removere();
+        inserire();
+    }//GEN-LAST:event_bt_editareActionPerformed
+
+    private void bt_editarcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editarcActionPerformed
+        inserirc();
+        removerc();
+    }//GEN-LAST:event_bt_editarcActionPerformed
+
+    private void table_chamadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_chamadosMouseClicked
+        int i = table_chamados.getSelectedRow();
+        Chamados c = chamados.get(i);
+        tf_chamado.setText(c.getChamado());
+        tf_desc.setText(c.getDesc());
+        cb_equip.setSelectedIndex(i);
+        tf_data_ab.setText(f.format(c.getData_abertura()));
+    }//GEN-LAST:event_table_chamadosMouseClicked
+
+    private void table_equipMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_equipMouseClicked
+        int i = table_equip.getSelectedRow();
+        Equipamentos e = equipamentos.get(i);
+        tf_nome.setText(e.getNome());
+        tf_fabricante.setText(e.getFabricante());
+
+        tf_preco.setText(Double.toString(e.getPreco()));
+        tf_nr_serie.setText(Integer.toString(e.getNro_serie()));
+        tf_data_fabr.setText(f.format(e.getData_fabricacao()));
+    }//GEN-LAST:event_table_equipMouseClicked
 
     /**
      * @param args the command line arguments
