@@ -348,6 +348,8 @@ public class Janela extends javax.swing.JFrame implements Serializable {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    //<editor-fold defaultstate="collapsed" desc=" Code">
     private void preencher() {
         DefaultTableModel modelc = (DefaultTableModel) table_chamados.getModel();
         DefaultTableModel modele = (DefaultTableModel) table_equip.getModel();
@@ -626,6 +628,8 @@ public class Janela extends javax.swing.JFrame implements Serializable {
             System.err.println("Selecione uma linha para remover");
         }
     }
+    
+    //</editor-fold>
 
     /**
      * @param args the command line arguments
