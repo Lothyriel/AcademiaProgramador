@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Academia_do_Programador;
 
 import java.io.ObjectInputStream;
@@ -11,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -149,7 +143,7 @@ public class Janela extends javax.swing.JFrame implements Serializable {
                 bt_editareActionPerformed(evt);
             }
         });
-        panel_equipamentos.add(bt_editare, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 520, 83, -1));
+        panel_equipamentos.add(bt_editare, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 520, 80, -1));
 
         bt_removere.setText("Remover");
         bt_removere.addActionListener(new java.awt.event.ActionListener() {
@@ -417,87 +411,10 @@ public class Janela extends javax.swing.JFrame implements Serializable {
     }
 
     private void bt_inserireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserireActionPerformed
-        double preco = 0;
-        String nome = tf_nome.getText();
-        int nro_serie = -1, i = 0;
-        String fabricante = tf_fabricante.getText();
-        boolean existe = false;
-
-        LocalDate data_fabr = null;
-        try {
-            nro_serie = Integer.parseInt(tf_nr_serie.getText());
-            for (Equipamentos eq : equipamentos) {
-                i++;
-                if (eq.getNro_serie() == nro_serie) {
-                    existe = true;
-                }
-            }
-            if (nome.length() < 6) {
-                System.err.println("Insira um nome com mais de 6 caracteres");
-            } else if (fabricante.equals("")) {
-                System.err.println("Insira um Fabricante");
-            } else if (existe == true) {
-                System.out.println("Número de série ja cadastrado");
-            } else {
-                try {
-                    preco = Double.parseDouble(tf_preco.getText());
-
-                    try {
-                        data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
-                        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
-                        equipamentos.add(equipa);
-                        System.out.println("CADASTRADO!");
-                        limpar();
-                        preencher();
-                    } catch (Exception e) {
-                        System.err.println("Insira uma data válida");
-                    }
-                } catch (Exception e) {
-                    System.err.println("Insira um preço válido!!!");
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Insira um numero de série válido");
-        }
+        inserire();
     }//GEN-LAST:event_bt_inserireActionPerformed
     private void bt_inserircActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_inserircActionPerformed
-        String desc = tf_desc.getText();
-        int i = 0, chamado = -1;
-        LocalDate data_ab = null;
-        boolean existe = false;
-
-        try {
-            chamado = Integer.parseInt(tf_chamado.getText());
-            for (Chamados ch : chamados) {
-                i++;
-                if (ch.getChamado() == chamado) {
-                    existe = true;
-                }
-            }
-            if (desc.equals("")) {
-                System.err.println("Insira uma descrição");
-            } else if (existe == true) {
-
-                System.out.println("Chamado já inserido");
-            } else {
-                try {
-                    data_ab = data_ab.parse(tf_data_ab.getText(), f);
-                    try {
-                        Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
-                        chamados.add(c);
-                        System.out.println("CADASTRADO!!");
-                        preencher();
-                        limpar();
-                    } catch (Exception e) {
-                        System.err.println("Nenhum equipamento cadastrado");
-                    }
-                } catch (Exception e) {
-                    System.err.println("Insira uma data válida");
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Insira um código de chamado válido");
-        }
+        inserirc();
     }//GEN-LAST:event_bt_inserircActionPerformed
 
     private void AbasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AbasMouseClicked
@@ -517,69 +434,22 @@ public class Janela extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_formWindowOpened
 
     private void bt_removercActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removercActionPerformed
-        try {
-            DefaultTableModel modelc = (DefaultTableModel) table_chamados.getModel();
-            int i = table_chamados.getSelectedRow();
-            chamados.remove(i);
-            modelc.removeRow(i);
-            limpar();
-        } catch (Exception e) {
-            System.err.println("Selecione uma linha para remover");
-        }
+        removerc();
     }//GEN-LAST:event_bt_removercActionPerformed
 
     private void bt_removereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_removereActionPerformed
+        removere();
+    }//GEN-LAST:event_bt_removereActionPerformed
+
+    private void bt_editareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editareActionPerformed
         try {
             DefaultTableModel modele = (DefaultTableModel) table_equip.getModel();
             int i = table_equip.getSelectedRow();
             equipamentos.remove(i);
             modele.removeRow(i);
-            limpar();
+            inserire();
         } catch (Exception e) {
             System.err.println("Selecione uma linha para remover");
-        }
-    }//GEN-LAST:event_bt_removereActionPerformed
-
-    private void bt_editareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editareActionPerformed
-        double preco = 0;
-        String nome = tf_nome.getText();
-        int nro_serie = -1, i = 0;
-        String fabricante = tf_fabricante.getText();
-        boolean existe = false;
-        try {
-            nro_serie = Integer.parseInt(tf_nr_serie.getText());
-            for (Equipamentos e : equipamentos) {
-                i++;
-                if (e.getNro_serie() == nro_serie) {
-                    existe = true;
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Insira um numero de série já cadastrado!!!");
-        }
-        LocalDate data_fabr = null;
-
-        if (nome.length() < 6) {
-            System.err.println("Insira um nome com mais de 6 caracteres");
-        } else if (fabricante.equals("")) {
-            System.err.println("Insira um Fabricante");
-        } else if (existe == false) {
-            System.out.println("Insira um número de série ja cadastrado");
-        } else {
-            try {
-                preco = Double.parseDouble(tf_preco.getText());
-                try {
-                    Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr.parse(tf_data_fabr.getText()), fabricante);
-                    equipamentos.set(i, equipa);
-                    System.out.println("Editado!");
-                    limpar();
-                    preencher();
-                } catch (Exception e) {
-                    System.err.println("Insira uma data válida");
-                }
-            } catch (Exception e) {
-                System.err.println("Insira um preço válido!!!");
-            }
         }
     }//GEN-LAST:event_bt_editareActionPerformed
 
@@ -647,6 +517,115 @@ public class Janela extends javax.swing.JFrame implements Serializable {
         Listas s = new Listas(equipamentos, chamados);
         serializar(s);
     }//GEN-LAST:event_formWindowClosed
+
+    private void inserire() {
+        double preco = 0;
+        String nome = tf_nome.getText();
+        int nro_serie = -1, i = 0;
+        String fabricante = tf_fabricante.getText();
+        boolean existe = false;
+
+        LocalDate data_fabr = null;
+        try {
+            nro_serie = Integer.parseInt(tf_nr_serie.getText());
+            for (Equipamentos eq : equipamentos) {
+                i++;
+                if (eq.getNro_serie() == nro_serie) {
+                    existe = true;
+                }
+            }
+            if (nome.length() < 6) {
+                System.err.println("Insira um nome com mais de 6 caracteres");
+            } else if (fabricante.equals("")) {
+                System.err.println("Insira um Fabricante");
+            } else if (existe == true) {
+                System.out.println("Número de série ja cadastrado");
+            } else {
+                try {
+                    preco = Double.parseDouble(tf_preco.getText());
+
+                    try {
+                        data_fabr = data_fabr.parse(tf_data_fabr.getText(), f);
+                        Equipamentos equipa = new Equipamentos(nome, preco, nro_serie, data_fabr, fabricante);
+                        equipamentos.add(equipa);
+                        System.out.println("CADASTRADO!");
+                        limpar();
+                        preencher();
+                    } catch (Exception e) {
+                        System.err.println("Insira uma data válida");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Insira um preço válido!!!");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Insira um numero de série válido");
+        }
+    }
+
+    private void inserirc() {
+        String desc = tf_desc.getText();
+        int i = 0, chamado = -1;
+        LocalDate data_ab = null;
+        boolean existe = false;
+
+        try {
+            chamado = Integer.parseInt(tf_chamado.getText());
+            for (Chamados ch : chamados) {
+                i++;
+                if (ch.getChamado() == chamado) {
+                    existe = true;
+                }
+            }
+            if (desc.equals("")) {
+                System.err.println("Insira uma descrição");
+            } else if (existe == true) {
+
+                System.out.println("Chamado já inserido");
+            } else {
+                try {
+                    data_ab = data_ab.parse(tf_data_ab.getText(), f);
+                    try {
+                        Chamados c = new Chamados(chamado, desc, equipamentos.get(cb_equip.getSelectedIndex()), data_ab);
+                        chamados.add(c);
+                        System.out.println("CADASTRADO!!");
+                        preencher();
+                        limpar();
+                    } catch (Exception e) {
+                        System.err.println("Nenhum equipamento cadastrado");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Insira uma data válida");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Insira um código de chamado válido");
+        }
+    }
+
+    private void removere() {
+        try {
+            DefaultTableModel modele = (DefaultTableModel) table_equip.getModel();
+            int i = table_equip.getSelectedRow();
+            equipamentos.remove(i);
+            modele.removeRow(i);
+            limpar();
+        } catch (Exception e) {
+            System.err.println("Selecione uma linha para remover");
+        }
+    }
+
+    private void removerc() {
+        try {
+            DefaultTableModel modelc = (DefaultTableModel) table_chamados.getModel();
+            int i = table_chamados.getSelectedRow();
+            chamados.remove(i);
+            modelc.removeRow(i);
+            limpar();
+        } catch (Exception e) {
+            System.err.println("Selecione uma linha para remover");
+        }
+    }
 
     /**
      * @param args the command line arguments
