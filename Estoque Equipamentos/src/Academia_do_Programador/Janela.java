@@ -365,6 +365,7 @@ public class Janela extends javax.swing.JFrame implements Serializable {
             modele.addRow(new String[]{u.getNome(), s, u.getFabricante()});
         }
 
+        //DEFININDO A QUANTIDADE DE DIAS EM ABERTO NA TABELA DE CHAMADOS
         modelc.setRowCount(0);
         for (Chamados u : chamados) {
             long d = u.getData_abertura().until(LocalDate.now(), ChronoUnit.DAYS);
@@ -500,7 +501,8 @@ public class Janela extends javax.swing.JFrame implements Serializable {
         Chamados c = chamados.get(i);
         tf_chamado.setText(Integer.toString(c.getChamado()));
         tf_desc.setText(c.getDesc());
-        cb_equip.setSelectedIndex(i);
+        cb_equip.setSelectedItem(chamados.get(i).getEquipamento().getNome());
+        System.out.println(chamados.get(i).getEquipamento().getNome());
         tf_data_ab.setText(f.format(c.getData_abertura()));
     }//GEN-LAST:event_table_chamadosMouseClicked
 
@@ -628,9 +630,8 @@ public class Janela extends javax.swing.JFrame implements Serializable {
             System.err.println("Selecione uma linha para remover");
         }
     }
-    
-    //</editor-fold>
 
+    //</editor-fold>
     /**
      * @param args the command line arguments
      */
